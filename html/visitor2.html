@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <meta http-equiv="X-UA-Compatible" content="ie=edge">
+   <title>Cadastro de Visitantes</title>
+   <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+   <link rel="stylesheet" href="../css/visitor.css">
+</head>
+
+
+<script>
+
+   if (navigator.mediaDevices.getUserMedia) {
+      navigator.mediaDevices.getUserMedia({ video: { width: 720, height: 480, facingMode: "user" } })
+         .then(function (mediaStream) {
+            var video = document.querySelector("#videoElement");
+            video.srcObject = mediaStream;
+         })
+         .catch(function (err0r) {
+            console.log("Something went wrong!");
+            console.log(err0r);
+         });
+   }
+
+</script>
+
+<body>
+
+   <video autoplay="true" id="videoElement"></video>
+
+</body>
+
+</html>
