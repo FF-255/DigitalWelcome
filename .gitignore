@@ -1,0 +1,4 @@
+#Ignoring Node Modules and Configuration Files
+/node_modules
+/config/config.json
+/config/previous.json

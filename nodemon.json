@@ -1,0 +1,7 @@
+{
+   "ignore": [
+      "/config/config.json",
+      "/config/initial.json",
+      "config/previous.json"
+   ]
+}

@@ -1,0 +1,39 @@
+{
+  "name": "digitalWelcome",
+  "version": "v0.9.0",
+  "description": "Digital Welcome Project",
+  "main": "index.js",
+  "keywords": [
+    "Digital Welcome",
+    "WebexTeams",
+    "NodeJS",
+    "Express"
+  ],
+  "scripts": {
+    "start": "node quickstart/onEvent-all-all.js"
+  },
+  "homepage": "https://github.com/acassemi/virtual-welcoming",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/acassemi/virtual-welcoming"
+  },
+  "author": "Fabiano Furlan (Technical Solutions Architect)",
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "config": "^3.0.1",
+    "debug": "^3.1.0",
+    "express": "^4.16.4",
+    "global-tunnel-ng": "^2.7.1",
+    "htmlparser2": "^3.10.1",
+    "is-port-reachable": "^2.0.0",
+    "joi": "^14.3.1",
+    "jsxapi": "^4.2.0",
+    "mongoose": "^5.4.18",
+    "node-sparkclient": "^0.1.4",
+    "nodemailer": "^4.7.0",
+    "nodemon": "^1.18.10",
+    "qrcode": "^1.3.3",
+    "twilio": "^3.29.1"
+  }
+}
