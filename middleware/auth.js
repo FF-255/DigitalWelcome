@@ -14,13 +14,18 @@ Module developed by:
 
 //##########  Ext Modules  ##########
 
-const express = require('express');
-const router = express.Router();
+const jwt = require('jsonwebtoken');
+const config = require('config');
 
-router.get('/', (req, res) => {
-   res.sendFile('/html/kiosk.html', { 'root': process.env.APP_DIR + '/public' });
-});
+module.exports = function auth(req, res, next) {
+   const token = req.header('x-auth-token');
+   if (!token) return res.status(410).send('Access denied. No token provided');
 
-//##########    Exports    ##########
-
-module.exports = router;
+   try {
+      const decoded = jwt.verify(token, config.get('jwtPrivateKey'));
+      req.user = decoded;
+      next();
+   } catch (error) {
+      res.status(400).send('Invalid token sent');
+   }
+}

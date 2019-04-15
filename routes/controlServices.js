@@ -14,8 +14,8 @@ Module developed by:
 
 //##########  Ext Modules  ##########
 
-const validation = require('../modules/validation');
-const controlServices = require('../modules/controlServices');
+const validation = require('../components/validation');
+const controlServices = require('../components/controlServices');
 const express = require('express');
 const router = express.Router();
 
@@ -24,34 +24,6 @@ const router = express.Router();
 const errDescHeader = '--- Error(s) Description ---  \n';
 
 //##########   Data Read   ##########
-
-router.get('/status', (req, res) => {
-
-   validation.controlServiceStatusParams(req.body, "READ")
-      .then(val1 => controlServices.status())
-      .then(data => {
-         if (data) res.status(200).send(data)
-         else res.status(404).send(errDescHeader + err);
-      })
-      .catch(err => {
-         console.log(err);
-         res.status(400).send(errDescHeader + err);
-      });
-});
-
-router.post('/restart', (req, res) => {
-
-   validation.controlServicesRestartParams(req.body, "CREATE")
-      .then(val1 => controlServices.restart())
-      .then(data => {
-         if (data) res.status(200).send(data)
-         else res.status(404).send(errDescHeader + err);
-      })
-      .catch(err => {
-         console.log(err);
-         res.status(400).send(errDescHeader + err);
-      });
-});
 
 router.get('/osInformation', (req, res) => {
 

@@ -29,6 +29,8 @@ const configs = require('../routes/configs');
 const controlServices = require('../routes/controlServices');
 const networkAccess = require('../routes/networkAccess');
 const kiosk = require('../routes/kiosk');
+const users = require('../routes/users'); // Future use
+const auth = require('../routes/auth'); // Future use
 
 module.exports = function (welcomeWebApp) {
    welcomeWebApp.use('/', home);
@@ -45,4 +47,6 @@ module.exports = function (welcomeWebApp) {
    welcomeWebApp.use('/api/v1/configs', configs);
    welcomeWebApp.use('/api/v1/controlServices', controlServices);
    welcomeWebApp.use('/api/v1/networkAccess', networkAccess);
+   welcomeWebApp.use('/api/v1/users', users); // Future use
+   welcomeWebApp.use('/api/v1/auth', auth); // Future use
 }

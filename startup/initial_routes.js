@@ -19,9 +19,14 @@ const express = require('express');
 const home = require('../routes/home');
 const configs = require('../routes/configs');
 const osInformation = require('../routes/controlServices');
+const users = require('../routes/users');
+const auth = require('../routes/auth');
+
 
 module.exports = function (welcomeWebApp) {
    welcomeWebApp.use('/', home);
    welcomeWebApp.use('/api/v1/configs', configs);
    welcomeWebApp.use('/api/v1/controlServices', osInformation);
+   welcomeWebApp.use('/api/v1/users', users);
+   welcomeWebApp.use('/api/v1/auth', auth);
 }

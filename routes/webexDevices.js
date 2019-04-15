@@ -14,9 +14,9 @@ Module developed by:
 
 //##########  Ext Modules  ##########
 
-const validation = require('../modules/validation');
-const database = require('../modules/database');
-const webexDevices = require('../modules/webexDevices');
+const validation = require('../components/validation');
+const database = require('../components/database');
+const webexDevices = require('../components/webexDevices');
 const express = require('express');
 const router = express.Router();
 

@@ -14,9 +14,9 @@ Module developed by:
 
 //##########  Ext Modules  ##########
 
-const config = require('config');
 const nodemailer = require('nodemailer');
 
+const config = require('config');
 const emailType = config.get("email.service");
 const emailSecure = config.get("email.authentication");
 const emailUser = config.get("email.username");

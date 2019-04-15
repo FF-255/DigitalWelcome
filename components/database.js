@@ -16,11 +16,8 @@ Module developed by:
 
 const config = require('config');
 const mongoose = require('mongoose');
-
 const hostname = config.get("database.hostname");
 const port = config.get("database.port");
-
-console.log(`mongodb://${hostname}:${port}/digitalwelcome`);
 
 mongoose.connect(`mongodb://${hostname}:${port}/digitalwelcome`, { useNewUrlParser: true } )
    .then (() => {
@@ -39,67 +36,6 @@ mongoose.set('useCreateIndex', true);
 //##########MongoDB Schemas##########
 
 const ObjectId = mongoose.Schema.Types.ObjectId;
-
-const configSchema = new mongoose.Schema({
-
-   general: {
-      port: { type: Number, required: true },
-      serviceinterval: { type: Number, required: true },
-      proxy: {
-         enable: { type: Boolean, required: true },
-         hostname: { type: String, required: true },
-         port: { type: Number }
-      }
-   },
-   database: {
-      hostname: { type: String, required: true },
-      port: { type: Number },
-      authentication: { type: Boolean, required: true },
-      username: { type: String },
-      password: { type: String }
-   },
-   notification: {
-      language: { type: String, required: true },
-      email: { type: Boolean, required: true },
-      sms: { type: Boolean, required: true },
-      webexteams: { type: Boolean, required: true },
-      digitalsignage: { type: Boolean, required: true },
-      networkaccess: { type: Boolean, required: true }
-   },
-   email: {
-      service: { type: String },
-      hostname: { type: String },
-      port: { type: Number },
-      username: { type: String },
-      password: { type: String },
-      authentication: { type: String }
-   },
-   sms: {
-      service: { type: String },
-      account: { type: String },
-      token: { type: String },
-      phone: { type: String },
-   },
-   webexteams: {
-      access_token: { type: String }
-   },
-   networkaccess: {
-      hostname: { type: String },
-      port: { type: Number },
-      ers_username: { type: String },
-      ers_password: { type: String },
-      sponsor_username: { type: String },
-      sponsor_password: { type: String },
-      sponsor_userid: { type: String },
-      guest_portalid: { type: String }
-   },
-   digitalsignage: {
-      hostname: { type: String },
-      username: { type: String },
-      password: { type: String }
-   },
-   date: { type: Date, default: Date.now }
-});
 
 const contactSchema = new mongoose.Schema({
    name: {
@@ -205,7 +141,6 @@ const Totem = mongoose.model('Totem', totemSchema);
 const Checkin = mongoose.model('Checkin', checkinSchema);
 const WebexDevice = mongoose.model('WebexDevice', webexDeviceSchema);
 const Signage = mongoose.model('Signage', digitalSignageSchema);
-const Config = mongoose.model('Config', configSchema);
 
 //##########   Functions   ##########
 
@@ -659,109 +594,6 @@ async function getAllMeetingInfo(params) {
    return (allMeetingInfo);
 }
 
-//##########    Configs    ##########
-
-function createConfig(params) {
-
-   //Creates a new config document
-
-   return new Promise((resolve, reject) => {
-
-      const config = new Config({
-
-         general: {
-            port: params.general.port,
-            serviceinterval: params.general.serviceinterval,
-            proxy: {
-               enable: params.general.proxy.enable,
-               hostname: params.general.proxy.hostname,
-               port: params.general.proxy.port
-            }
-         },
-         database: {
-            hostname: params.database.hostname,
-            port: params.database.port,
-            authentication: params.database.authentication,
-            username: params.database.username,
-            password: params.database.password,
-         },
-         notification: {
-            language: params.notification.language,
-            email: params.notification.email,
-            sms: params.notification.sms,
-            webexteams: params.notification.webexteams,
-            digitalsignage: params.notification.digitalsignage,
-            networkaccess: params.notification.networkaccess
-         },
-         email: {
-            service: params.email.service,
-            hostname: params.email.hostname,
-            port: params.email.port,
-            username: params.email.username,
-            password: params.email.password,
-            authentication: params.email.authentication
-         },
-         sms: {
-            service: params.sms.service,
-            account: params.sms.account,
-            token: params.sms.token,
-            phone: params.sms.phone
-         },
-         webexteams: {
-            access_token: params.webexteams.access_token
-         },
-         networkaccess: {
-            hostname: params.networkaccess.hostname,
-            port: params.networkaccess.port,
-            ers_username: params.networkaccess.ers_username,
-            ers_password: params.networkaccess.ers_password,
-            sponsor_username: params.networkaccess.sponsor_username,
-            sponsor_password: params.networkaccess.sponsor_password,
-            sponsor_userid: params.networkaccess.sponsor_userid,
-            guest_portalid: params.networkaccess.guest_portalid
-         },
-         digitalsignage: {
-            hostname: params.digitalsignage.hostname,
-            username: params.digitalsignage.username,
-            password: params.digitalsignage.password
-         }
-      });
-
-      config.save((err, data) => {
-         if (err) reject(err);
-         else resolve(data);
-      });
-   });
-}
-
-function readConfig(params) {
-
-   //Returns data from the last configuration
-
-   return new Promise((resolve, reject) => {
-
-      Config.findOne({}, {}, { sort: { 'date': -1 }}, (err, data) => {
-         if (err) reject(err);
-         else resolve(data);
-      });
-
-   });
-}
- 
-function readPreviousConfig(params) {
-
-   //Returns data from the last configuration
-
-   return new Promise((resolve, reject) => {
-
-      Config.find({}, {}, { sort: { 'date': -1 }, skip: 1, limit: 1 }, (err, data) => {
-         if (err) reject(err);
-         else resolve(data[0]);
-      });
-
-   });
-}
-
 //########## Aux Functions ##########
 
 //Returns current date in the format YYYY-MM-DD 00:00:00
@@ -802,9 +634,6 @@ module.exports.createWebexDevice = createWebexDevice;
 module.exports.readWebexDevice = readWebexDevice;
 module.exports.createDigitalSignage = createDigitalSignage;
 module.exports.readDigitalSignage = readDigitalSignage;
-module.exports.createConfig = createConfig;
-module.exports.readConfig = readConfig;
-module.exports.readPreviousConfig = readPreviousConfig;
 module.exports.getAllContactInfo = getAllContactInfo;
 module.exports.getAllCheckinInfo = getAllCheckinInfo;
 module.exports.getAllMeetingInfo = getAllMeetingInfo;

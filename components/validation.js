@@ -93,7 +93,7 @@ const controlServicesStatusReadSchema = {
 const contactCreateUpdateSchema = {
    firstName: Joi.string().min(3).required(),
    lastName: Joi.string().min(3).required(),
-   email: Joi.string().regex(/^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i).required(),
+   email: Joi.string().email().required(),
    phone: Joi.string().min(10),
    type: Joi.number().min(1).max(5).required(), // 1 - Cisco Employee, 2 - Customer, 3 - Partner
    photo: Joi.binary(),
@@ -104,7 +104,7 @@ const contactReadSchema = {
    _id: Joi.string().max(24),
    firstName: Joi.string().min(3),
    lastName: Joi.string().min(3),
-   email: Joi.string().regex(/^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i),
+   email: Joi.string().email(),
    type: Joi.number().min(1).max(5) // 1 - Cisco Employee, 2 - Customer, 3 - Partner
 };
 
@@ -207,12 +207,11 @@ const webexDeviceCreateUpdateSchema = {
 };
 
 const webexDeviceReadSchema = {
-   _id: Joi.string().max(24),
-   name: Joi.string().regex(/^SPL1-26-/)
+   _id: Joi.string().max(24)
 };
 
 const webexTeamsMessageSchema = Joi.object().keys({
-   email: Joi.array().items(Joi.string().regex(/^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i).required()).single(),
+   email: Joi.array().items(Joi.string().email().required()).single(),
    message: Joi.string().min(4).required(),
    file: Joi.binary(),
    fileName: Joi.string().regex(/\.(jpg|jpeg|bmp|gif|png|doc|docx|ppt|pptx|pdf)$/i),
@@ -220,7 +219,7 @@ const webexTeamsMessageSchema = Joi.object().keys({
 }).with('file', 'fileName');
 
 const emailMessageSchema = {
-   email: Joi.array().items(Joi.string().regex(/^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i).required()).single(),
+   email: Joi.array().items(Joi.string().email().required()).single(),
    subject: Joi.string().min(10).required(),
    message: Joi.string().min(10).required()
 };
@@ -232,9 +231,9 @@ const smsMessageSchema = {
 
 const digitalSignageCreateUpdateSchema = {
    _id: Joi.string().max(24),
-   name: Joi.string().regex(/^SPL1-26-/).required(),
+   name: Joi.string().required(),
    model: Joi.string().required(),
-   ip: Joi.string().regex(/^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/).required(),  //(/^((0|1\\d?\\d?|2[0-4]?\\d?|25[0-5]?|[3-9]\\d?)\\.){3}(0|1\\d?\\d?|2[0-4]?\\d?|25[0-5]?|[3-9]\\d?)$/).required(),
+   ip: Joi.string().regex(/^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/).required(),
    username: Joi.string().required(),
    password: Joi.string().required(),
    defaultContent: Joi.string()
@@ -242,7 +241,7 @@ const digitalSignageCreateUpdateSchema = {
 
 const digitalSignageReadSchema = {
    _id: Joi.string().max(24),
-   name: Joi.string().regex(/^SPL1-26-/),
+   name: Joi.string(),
    content: Joi.string()
 };
 
@@ -283,21 +282,20 @@ function configParams(params, command) {
 
 //########## Ctrl Services ##########
 
-function controlServicesRestartParams(params, command) {
+function osInformationParams(params, command) {
 
    return new Promise((resolve, reject) => {
 
       switch (command) {
 
-         case "CREATE":
-            Joi.validate(params, controlServicesStatusReadSchema, { abortEarly: false }, (err, data) => {
+         case "READ":
+            Joi.validate(params, osInformationReadSchema, { abortEarly: false }, (err, data) => {
                if (err) reject(simplifyErrorMessage(err));
                else resolve(data);
             });
       }
    });
 }
-
 
 function controlServicesStatusParams(params, command) {
 
@@ -624,23 +622,6 @@ function digitalSignageParams(params, command) {
    });
 }
 
-//##########OS Information ##########
-
-function osInformationParams(params, command) {
-
-   return new Promise((resolve, reject) => {
-
-      switch (command) {
-
-         case "READ":
-            Joi.validate(params, osInformationReadSchema, { abortEarly: false }, (err, data) => {
-               if (err) reject(simplifyErrorMessage(err));
-               else resolve(data);
-            });
-      }
-   });
-}
-
 //########## Aux Functions ##########
 
 // Returns only the text messages included in Joi's responses
@@ -654,7 +635,6 @@ function simplifyErrorMessage(message) {
 //##########    Exports    ##########
 
 module.exports.configParams = configParams;
-module.exports.controlServicesRestartParams = controlServicesRestartParams;
 module.exports.controlServicesStatusParams = controlServicesStatusParams;
 module.exports.contactParams = contactParams;
 module.exports.roomParams = roomParams;

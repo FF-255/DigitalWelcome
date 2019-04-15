@@ -6,9 +6,8 @@
 <!-- toc -->
 
 **Main Documentation**
-  - 
-  Installation Guide
-  - 
+  - [`Introduction`](#Introduction)
+  - [`Installation Guide`](#Installation_Guide)
 
 **Database API's**
   - [`Contacts`](#contacts)
@@ -31,6 +30,23 @@
   - [`CallConnect`](#callconnect)
 
 <!-- tocstop -->
+
+### `Introduction`
+
+Digital Welcome is a collection of restfull API's used for Digital Welcoming project created using nodeJS and mongoDB.
+
+### `Installation_Guide`
+
+Please be sure to install nodeJS and mongoDB before proceding.
+
+For Windows, Mac, Linux and bash users, open a terminal and type:
+
+``` shell
+git clone git@github.com:FF-255/DigitalWelcome.git
+cd DigitalWelcome
+npm install
+nodemon
+```
 
 ### `Contacts`
 
@@ -308,8 +324,8 @@ Example:
  ``` json
 {
       "phone": "11992511111",
-      "subject": "[Digital Welcome] Message to you",
-      "message": "This is a notification message to you."
+      "subject": "[Digital Welcome] Special Message",
+      "message": "This is a special notification message."
 }
 ```
 

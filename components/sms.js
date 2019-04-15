@@ -31,7 +31,7 @@ function sendMessage(params) {
 
       let smsOptions = {
          from: phoneNumber,
-         to: "+55" + params.phone,
+         to: params.phone,
          body: params.message
       };
 

@@ -14,13 +14,13 @@ Module developed by:
 
 //##########  Ext Modules  ##########
 
-const validation = require('../modules/validation');
-const database = require('../modules/database');
-const notify = require('../modules/notify');
-const message = require('../modules/messages');
-const webexTeams = require('../modules/webexTeams');
-const email = require('../modules/email');
-const sms = require('../modules/sms');
+const validation = require('../components/validation');
+const database = require('../components/database');
+const notify = require('../components/notify');
+const message = require('../components/messages');
+const webexTeams = require('../components/webexTeams');
+const email = require('../components/email');
+const sms = require('../components/sms');
 const express = require('express');
 const router = express.Router();
 
@@ -37,7 +37,7 @@ router.post('/checkin/:id', (req, res) => {
       .then(() => database.getAllCheckinInfo({ "_id": req.params.id }))
       .then((allCheckinInfo) => notify.notifyCheckin(allCheckinInfo))
       .then((data) => res.status(200).send(data))
-      .catch((err) => res.status(400).send(errDescHeader + err));
+      .catch((err) => res.status(503).send(errDescHeader + err));
 })
 
 router.post('/meeting/:id', (req, res) => {
@@ -46,7 +46,7 @@ router.post('/meeting/:id', (req, res) => {
       .then(() => database.getAllMeetingInfo({ "_id": req.params.id }))
       .then((allMeetingInfo) => notify.notifyMeeting(allMeetingInfo))
       .then((data) => res.status(200).send(data))
-      .catch((err) => res.status(400).send(errDescHeader + err));
+      .catch((err) => res.status(503).send(errDescHeader + err));
 })
 
 router.post('/teams', (req, res) => {
@@ -54,7 +54,7 @@ router.post('/teams', (req, res) => {
    validation.webexTeamsParams(req.body)
       .then(val1 => webexTeams.sendMessage(req.body))
       .then(data => res.status(200).send(data))
-      .catch(err => res.status(400).send(errDescHeader + err));
+      .catch(err => res.status(503).send(errDescHeader + err));
 });
 
 router.post('/email', (req, res) => {
@@ -62,7 +62,7 @@ router.post('/email', (req, res) => {
    validation.emailParams(req.body)
       .then(val1 => email.sendMessage(req.body))
       .then(data => res.status(200).send(data))
-      .catch(err => res.status(400).send(errDescHeader + err));
+      .catch(err => res.status(503).send(errDescHeader + err));
 });
 
 router.post('/sms', (req, res) => {
@@ -70,7 +70,7 @@ router.post('/sms', (req, res) => {
    validation.smsParams(req.body)
       .then(val1 => sms.sendMessage(req.body))
       .then(data => res.status(200).send(data))
-      .catch(err => res.status(400).send(errDescHeader + err));
+      .catch(err => res.status(503).send(errDescHeader + err));
 });
 
 module.exports = router;

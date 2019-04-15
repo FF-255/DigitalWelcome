@@ -14,13 +14,11 @@ Module developed by:
 
 //##########  Ext Modules  ##########
 
-const express = require('express');
-const router = express.Router();
+const bcrypt = require('bcrypt');
 
-router.get('/', (req, res) => {
-   res.sendFile('/html/kiosk.html', { 'root': process.env.APP_DIR + '/public' });
-});
+async function passwordHash(params) {
+   // Generates a salt and return the hashed password
+   return await bcrypt.hash(params, bcrypt.genSalt(10))
+}
 
-//##########    Exports    ##########
-
-module.exports = router;
+module.exports.passwordHash = passwordHash;

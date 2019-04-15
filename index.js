@@ -19,7 +19,7 @@ process.env.NODE_CONFIG_DIR = (__dirname + '/config');
 
 //##########  Ext Modules  ##########
 
-const configs = require('./modules/configs');
+const configs = require('./components/configs');
 const express = require('express');
 const welcomeWebApp = express();
 
@@ -45,4 +45,4 @@ welcomeWebApp.listen (port, () => {
 
 //##########    Services   ##########
 //##########    Monitor    ##########
-require('./modules/serviceStatus')();
+require('./components/serviceStatus')();

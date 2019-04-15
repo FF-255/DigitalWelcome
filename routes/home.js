@@ -14,14 +14,29 @@ Module developed by:
 
 //##########  Ext Modules  ##########
 
+const jwt = require('jsonwebtoken');
+const config = require('config');
 const express = require('express');
 const router = express.Router();
 
-router.get('/', (req, res) => {
-   res.sendFile('/html/config.html', { 'root': process.env.APP_DIR + '/public' });
-});
 
-// router.get('/images', (req, res) => { });
+router.get('/', (req, res) => {
+
+   // If no token is received return to login page
+   // const token = req.header('x-auth-token');
+   // if (!token) return res.sendFile('/html/login.html', { 'root': process.env.APP_DIR + '/public' });
+
+   // // if valid token return the configuration page ...
+   // try {
+   //    const decoded = jwt.verify(token, config.get('jwtPrivateKey'));
+   //    req.user = decoded;
+   //    res.header({ 'x-auth-token': token }).sendFile('/html/config.html', { 'root': process.env.APP_DIR + '/public' });
+
+   //    // ... or redirect to login page
+   // } catch (error) {
+      res.sendFile('/html/config.html', { 'root': process.env.APP_DIR + '/public' });
+   // }
+});
 
 //##########    Exports    ##########
 

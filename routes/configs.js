@@ -14,9 +14,10 @@ Module developed by:
 
 //##########  Ext Modules  ##########
 
-const validation = require('../modules/validation');
-const database = require('../modules/database');
-const configs = require('../modules/configs.js');
+const auth = require('../middleware/auth.js');
+const validation = require('../components/validation');
+const database = require('../components/database');
+const configs = require('../components/configs.js');
 const express = require('express');
 const router = express.Router();
 
@@ -44,7 +45,6 @@ router.post('/', (req, res) => {
 router.get('/', (req, res) => {
 
    validation.configParams(req.body, "READ")
-      // .then(val1 => database.readConfig(req.body))
       .then(val1 => configs.readCurrentConfigFromDisk())
       .then(data => {
          if (data) res.status(200).send(data)
@@ -56,7 +56,6 @@ router.get('/', (req, res) => {
 router.get('/previous', (req, res) => {
 
    validation.configParams(req.body, "READ")
-      // .then(val1 => database.readPreviousConfig(req.body))
       .then(val1 => configs.readPreviousConfigFromDisk())
       .then(data => {
          if (data) res.status(200).send(data)

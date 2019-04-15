@@ -14,9 +14,9 @@ Module developed by:
 
 //##########  Ext Modules  ##########
 
-const validation = require('../modules/validation');
-const database = require('../modules/database');
-const checkins = require('../modules/checkins');
+const validation = require('../components/validation');
+const database = require('../components/database');
+const checkins = require('../components/checkins');
 const express = require('express');
 const router = express.Router();
 

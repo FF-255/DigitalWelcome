@@ -27,17 +27,10 @@ const mItalic = '_';
 const mUList = '- ';
 const mLE = '  \n';
 
-// Meeting Confirmation</h2 > <br>
-//    <p style="line-height: 1.5; color: #888;">Hi, I would like to confirm the scheduling of your meeting ...</p>
-//    <p style="line-height: 1.5; color: #888;">... and provide the code below to simplify your checkin process</p>
-
 //##########    E-mail     ##########
 
 const hHTMLS = fs.readFileSync(process.env.APP_DIR + '/public/html/meetingEmailStart.html', 'utf8');
 const hHTMLE = fs.readFileSync(process.env.APP_DIR + '/public/html/meetingEmailEnd.html', 'utf8');
-
-// const hHTMLS = '<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta http-equiv="X-UA-Compatible" content="ie=edge"><title>Check-in efetuado com sucesso</title></head>';
-// const hHTMLE = '</body></html>';
 
 const hBColor = '<body style="background-color:#EEEEEE">';
 
@@ -93,7 +86,7 @@ const MES_MEETING_LINE2 = config.get("messages.MES_MEETING_LINE2");
 
 function configNotFound() {
 
-   vMessage = "************************ WARNING *************************\n";
+   vMessage =  "************************ WARNING *************************\n";
    vMessage += "             Configuration settings not found.            \n";
    vMessage += "    Please access API settings page for initial setup:    \n";
    vMessage += "                  http://<HOSTNAME>:85/                   \n";
@@ -270,4 +263,3 @@ module.exports.smsNetworkAccess = smsNetworkAccess;
 module.exports.emailMeetingSubject = emailMeetingSubject;
 module.exports.emailMeetingMessageHost = emailMeetingMessageHost;
 module.exports.emailMeetingMessageVisitor = emailMeetingMessageVisitor;
-

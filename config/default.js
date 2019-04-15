@@ -15,7 +15,7 @@ Module developed by:
 const appDir = process.env.APP_DIR;
 
 //##########  Ext Modules  ##########
-config = require(`${appDir}/modules/configs`);
+config = require(`${appDir}/components/configs`);
 fs = require('fs');
 
 //##########  Ext Modules  ##########
@@ -29,6 +29,7 @@ process.env.CONFIG_ID = configs._id;
 //##########  Ext Modules  ##########
 
 module.exports = {
+   "jwtPrivateKey": "",
    "DEBUG": DEBUG,
    "general": configs.general,
    "database": configs.database,

@@ -81,8 +81,15 @@ module.exports = function() {
       process.env.STATUS_DATABASE = await isPortReachable(databasePort, { host: databaseHostname });
 
       // Email
-      if (notification.email && emailService === "smtp") {
+      if (notification.email) {
+         
+         if (emailService === "smtp") {
          process.env.STATUS_EMAIL = await isPortReachable(emailPort, { host: emailHostname });
+         }
+
+         if (emailService === "gmail") {
+            process.env.STATUS_EMAIL = await isPortReachable(443, { host: 'gmail.google.com' });
+         }
       }
 
       // Network Access

@@ -22,15 +22,19 @@ const fs = require('fs');
 
 function prepareConfigurationFiles() {
 
-   // If new configuration file exists:
-   // - Copies config.json files to previous.json file
-   // - Copies config_new.json file to config.json file
-   // - Validates if file was copied successfully and removes config_new.json
-
-   // Else, if no config.json file exists:
-   // - Try to copy previous configuration from previous.json
+   /*
    
-   // Else, copies default configuration from initial.json
+   1. If new configuration file (config_new.json) exists:
+      - Copies config.json files to previous.json file
+      - Copies config_new.json file to config.json file
+      - Validates if file was copied successfully and removes config_new.json
+
+   2. If no config.json file exists:
+      - Try to copy previous configuration from previous.json
+   
+   3. Copies default configuration (initial.json) to config.json
+   
+   */
 
    if (fs.existsSync(`${appDir}/config/config_new.json`)) {
       fs.copyFileSync(`${appDir}/config/config.json`, `${appDir}/config/previous.json`);

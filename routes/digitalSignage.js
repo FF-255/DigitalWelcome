@@ -14,9 +14,9 @@ Module developed by:
 
 //##########  Ext Modules  ##########
 
-const validation = require('../modules/validation');
-const database = require('../modules/database');
-const digitalSignage = require('../modules/digitalSignage');
+const validation = require('../components/validation');
+const database = require('../components/database');
+const digitalSignage = require('../components/digitalSignage');
 const express = require('express');
 const router = express.Router();
 
