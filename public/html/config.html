@@ -437,22 +437,39 @@
          <!-- Digital Signage section -->
          <div class="form-row p-3 border rounded">
             <div class="form-group col-md-12">
-               <h3>Digital Signage - Digital Media Player (DMP)</h3>
+               <h3>Digital Signage - Cisco Vision</h3>
             </div>
-            <div class="form-group col-md-3">
+            <div class="form-group col-md-2">
                <label for="digitalsignage_hostname">Hostname</label>
                <input name="digitalsignage_hostname" type="text" class="form-control shadow-sm p-3 mb-1 rounded digitalsignage general"
                id="digitalsignage_hostname">
             </div>
-            <div class="form-group col-md-3">
+            <div class="form-group col-md-2">
+               <label for="digitalsignage_port">Port</label>
+               <input name="digitalsignage_port" type="text"
+                  class="form-control shadow-sm p-3 mb-1 rounded digitalsignage general" id="digitalsignage_port">
+            </div>
+            <div class="form-group col-md-2">
+               <label for="digitalsignage_authentication_enable">Authentication</label>
+               <select class="form-control shadow-sm p-3 mb-1 rounded digitalsignage general" id="digitalsignage_authentication_enable">
+                  <option>Enabled</option>
+                  <option>Disabled</option>
+               </select>
+            </div>
+            <div class="form-group col-md-2">
                <label for="digitalsignage_username">Username</label>
                <input name="digitalsignage_username" type="text" class="form-control shadow-sm p-3 mb-1 rounded digitalsignage general"
                id="digitalsignage_username">
             </div>
-            <div class="form-group col-md-3">
+            <div class="form-group col-md-2">
                <label for="digitalsignage_password">Password</label>
                <input name="digitalsignage_password" type="password" class="form-control shadow-sm p-3 mb-1 rounded digitalsignage general"
                   id="digitalsignage_password">
+            </div>
+            <div class="form-group col-md-2">
+               <label for="digitalsignage_trigger">Trigger ID</label>
+               <input name="digitalsignage_trigger" type="text"
+                  class="form-control shadow-sm p-3 mb-1 rounded digitalsignage general" id="digitalsignage_trigger">
             </div>
          </div><br>
 

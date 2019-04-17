@@ -14,6 +14,7 @@ Module developed by:
 
 //##########Mongo Database ##########
 
+const networkAccess = require('./networkAccess');
 const config = require('config');
 const mongoose = require('mongoose');
 const hostname = config.get("database.hostname");
@@ -333,7 +334,8 @@ function createNetworkAccess(params) {
          //checkinId: params.checkinId,
          hostId: params.hostId,
          visitorId: params.visitorId,
-         username: params.username 
+         username: params.username,
+         iseId: params.iseId
       });
 
       networkAccess.save((err, data) => {
@@ -556,42 +558,77 @@ function readDigitalSignage(params) {
 
 //########## Notifications ##########
 
-async function getAllContactInfo(params) {
+function getAllContactInfo(params) {
 
    allContactInfo = {};
 
-   allContactInfo.visitor = await readContact({ "_id": params.visitorId });
-   allContactInfo.host = await readContact({ "_id": params.hostId });
+   return new Promise(async(resolve, reject) => {
 
-   return (allContactInfo);
+      try {
+
+         allContactInfo.visitor = await readContact({ "_id": params.visitorId });
+         allContactInfo.host = await readContact({ "_id": params.hostId });
+
+         return resolve(allContactInfo);z
+      }
+      catch(error){ return reject(new Error(error)) }
+   })
 }
 
-async function getAllCheckinInfo(params) {
+function getAllCheckinInfo(params) {
 
-   allCheckinInfo = {};
+   return new Promise(async (resolve, reject) => {
 
-   allCheckinInfo.checkin = await readCheckin(params);
-   allCheckinInfo.visitor = await readContact({ "_id": allCheckinInfo.checkin.visitorId }); //Visitor info
-   allCheckinInfo.host = await readContact({ "_id": allCheckinInfo.checkin.hostId }); // Host info
-   if (allCheckinInfo.checkin.roomId) allCheckinInfo.room = await readRoom({ "_id": allCheckinInfo.checkin.roomId }); // Meeting Room info
-   if (allCheckinInfo.checkin.meetingId) allCheckinInfo.meeting = await readMeeting({ "_id": allCheckinInfo.checkin.meetingId }); // Meeting info
-   if (allCheckinInfo.checkin.networkAccessId) allCheckinInfo.networkAccess = await readNetworkAccess({ "_id": allCheckinInfo.checkin.networkAccessId }); // Network (Guest) Access info
-   if (allCheckinInfo.checkin.totemId) allCheckinInfo.totem = await readTotem({ "_id": allCheckinInfo.checkin.totemId }); // Totem info
-   if (allCheckinInfo.checkin.digitalSignageId) allCheckinInfo.digitalSignage = await readDigitalSignage({ "_id": allCheckinInfo.checkin.digitalSignageId }); // Digital Signage info
+      allCheckinInfo = {};
 
-   return (allCheckinInfo);
+      try {
+
+         allCheckinInfo.checkin = await readCheckin(params);
+         allCheckinInfo.visitor = await readContact({ "_id": allCheckinInfo.checkin.visitorId }); //Visitor info
+         allCheckinInfo.host = await readContact({ "_id": allCheckinInfo.checkin.hostId }); // Host info
+         if (allCheckinInfo.checkin.roomId) allCheckinInfo.room = await readRoom({ "_id": allCheckinInfo.checkin.roomId }); // Meeting Room info if available
+         if (allCheckinInfo.checkin.meetingId) allCheckinInfo.meeting = await readMeeting({ "_id": allCheckinInfo.checkin.meetingId }); // Meeting info if available
+
+         
+         if (allCheckinInfo.checkin.networkAccessId) {  // Network (Guest) Access info if available
+
+            try {
+
+               let networkAccessInfo = await readNetworkAccess({ "_id": allCheckinInfo.checkin.networkAccessId });
+               let { GuestUser } = await networkAccess.iseRequest('GET', 'id', networkAccessInfo.iseId);
+               networkAccessInfo.password = GuestUser.guestInfo.password;
+
+               allCheckinInfo.networkAccess = networkAccessInfo;
+            }
+            catch(error) { }
+         }
+
+         if (allCheckinInfo.checkin.totemId) allCheckinInfo.totem = await readTotem({ "_id": allCheckinInfo.checkin.totemId }); // Totem info if available
+         if (allCheckinInfo.checkin.digitalSignageId) allCheckinInfo.digitalSignage = await readDigitalSignage({ "_id": allCheckinInfo.checkin.digitalSignageId }); // Digital Signage info
+
+         return resolve(allCheckinInfo);
+      }
+      catch(error) { return reject(new Error(error))}
+   })   
 }
 
-async function getAllMeetingInfo(params) {
+function getAllMeetingInfo(params) {
 
    let allMeetingInfo = {};
 
-   allMeetingInfo.meeting = await readMeeting(params);
-   allMeetingInfo.visitor = await readContact({ "_id": allMeetingInfo.meeting.visitorId }); //Visitor info
-   allMeetingInfo.host = await readContact({ "_id": allMeetingInfo.meeting.hostId }); // Host info
-   if (allMeetingInfo.meeting.roomId) allMeetingInfo.room = await readRoom({ "_id": allMeetingInfo.meeting.roomId }); // Meeting Room info
+   return new Promise(async(resolve, reject) => {
 
-   return (allMeetingInfo);
+      try {
+
+         allMeetingInfo.meeting = await readMeeting(params);
+         allMeetingInfo.visitor = await readContact({ "_id": allMeetingInfo.meeting.visitorId }); //Visitor info
+         allMeetingInfo.host = await readContact({ "_id": allMeetingInfo.meeting.hostId }); // Host info
+         if (allMeetingInfo.meeting.roomId) allMeetingInfo.room = await readRoom({ "_id": allMeetingInfo.meeting.roomId }); // Meeting Room info if available
+
+         return resolve(allMeetingInfo);
+      }
+      catch(error) { return reject(new Error(error)) }
+   })
 }
 
 //########## Aux Functions ##########

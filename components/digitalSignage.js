@@ -12,54 +12,58 @@ Module developed by:
 
 /* jshint esversion: 6 */
 
-//##########  Ext Modules  ##########
+// process.env.APP_DIR = '/Users/ffurlan/CiscoApps/DigitalWelcome';
+// process.env.NODE_CONFIG_DIR = '/Users/ffurlan/CiscoApps/DigitalWelcome/config';
 
-// process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = 0;
+//##########  Ext Modules  ##########
 const request = require('request').defaults({ rejectUnauthorized: false, requestCert: true, agent: false });
+const config = require('config');
+
+const server = {
+   hostname: config.get("digitalsignage.hostname"),
+   port: config.get("digitalsignage.port")
+}
+
+const rooms = {
+   default: config.get("digitalsignage.trigger")
+}
 
 //########## Commands and  ##########
 //########## default video ##########
 
-const commandStartVideo = "/set_param?mng.command=start+video+file:///tmp/ftproot/usb_1/video/";
-const defaultVideo = "DEFAULT.ts";
+function playContent(roomName = "default") {
 
-function playContent(device, params) {   
+   trigger = rooms[roomName];
    
    return new Promise ((resolve, reject) => {
 
-      if (params.content) {
-         playRoomVideo(device, params)
-            .then(() => setTimeout(() => { playRoomVideo(device, "default") }, 25000))
-            .then(() => resolve("Content displayed sucessfully."))
-            .catch((err) => reject(err))
-      } else {
-         playRoomVideo(device, "default")
-            .then(() => resolve("Content displayed sucessfully."))
-            .catch((err) => reject(err))
-      }
+      selectCiscoVisionTrigger(trigger)
+         .then(() => resolve("Content displayed sucessfully."))
+         .catch((err) => reject(err))
    });
 }
 
-function playRoomVideo(device, params) {
+function selectCiscoVisionTrigger (params) {
 
    return new Promise((resolve, reject) => {
-
-      let requestParamsVideo =  {
-         url: null,
-         headers: {}
-      }
-
-      if (params == "default") { requestParamsVideo.url = `https://${device.ip}:7777${commandStartVideo}${defaultVideo}`; }
-      else {
-         videoFile = params.content.slice(8).toUpperCase() + '.ts';
-         requestParamsVideo.url = `https://${device.ip}:7777${commandStartVideo}${videoFile}`;
-      }
       
-      requestParamsVideo.headers = { "Authorization": "Basic " + new Buffer.from(device.username + ":" + device.password).toString("base64") };
+      let options =  {
+         method: 'POST',
+         url: `http://${server.hostname}:${server.port}/CiscoVision/ws/rest/trigger/input/${params}`,
+         // headers: {
+         //    'cache-control': 'no-cache',
+         //    'Content-Type': 'application/json',
+         //    // 'Authorization': 'Basic ' + new Buffer.from(server.username + ":" + server.password).toString('base64'),
+         //    'Accept': 'application/json',
+         // }
+      }
 
-      request(requestParamsVideo, function (error, response, body) {
-         if (error) reject(error)
-         else resolve(response)
+      request(options, function (error, response, body) {
+
+         if (error) return reject(new Error(error))
+         if (response.statusCode == 400 || response.statusCode == 404) return reject("Could not play the requested content")
+         if (response.statusCode == 200) return resolve(response)
+
       }); 
    });
 }

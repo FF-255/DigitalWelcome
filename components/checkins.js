@@ -17,43 +17,47 @@ Module developed by:
 database = require('./database');
 networkAccess = require('./networkAccess');
 
-async function createCheckin(params) {
-   
-   try {
+function createCheckin(params) {
 
-      let allContactInfo = {};
-      let guestAccountInfo = {};
-      let networkAccessInfo = {};
+   let allContactInfo = {};
+   let guestAccountInfo = {};
+   let networkAccessInfo = {};
+   let checkinParams = {
+      "visitorId": params.visitorId,
+      "hostId": params.hostId,
+   };
 
-      if (process.env.ISE_ALIVE === "Yes") {
+   return new Promise(async (resolve, reject) => {
+      
+      try {
 
-         allContactInfo = await database.getAllContactInfo(params);
+         // if (process.env.STATUS_NETWORKACCESS) {
+            // If ISE integration is Enabled AND Server is reachable
 
-         guestAccountInfo = await networkAccess.createGuestAccount(allContactInfo);
+            allContactInfo = await database.getAllContactInfo(params); // Gather all contact information
 
-         networkAccessParams = {
-            "visitorId": params.visitorId,
-            "hostId": params.hostId,
-            "username": guestAccountInfo.username
-         };
+            guestAccountInfo = await networkAccess.createGuestAccess(allContactInfo.visitor); // Create a new Guest Access
 
-         networkAccessInfo = await database.createNetworkAccess(networkAccessParams);
+            networkAccessParams = {
+               visitorId: params.visitorId,
+               hostId: params.hostId,
+               username: guestAccountInfo.guestInfo.userName,
+               iseId: guestAccountInfo.id
+            };
+
+            //Create new entry in database for future search
+            networkAccessInfo = await database.createNetworkAccess(networkAccessParams);
+
+            checkinParams.networkAccessId = networkAccessInfo._id;
+         // }
+
       }
-
-      let checkinParams = {
-         "visitorId": params.visitorId,
-         "hostId": params.hostId,
-         "username": networkAccessInfo.username || "notAvailable"
-      };
-
-      checkinResult = await database.createCheckin(checkinParams);
-
-      return(checkinResult);
-   }
-   catch (error) {
-
-      throw(new Error(error));
-   }
-};
+      catch (error) { console.log(error); }
+      
+      try { return resolve(await database.createCheckin(checkinParams)); }
+      catch (error) { return reject(new Error(error)); }
+      
+   })
+}
 
 module.exports.createCheckin = createCheckin;

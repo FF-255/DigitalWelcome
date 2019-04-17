@@ -75,7 +75,11 @@ module.exports = function() {
    networkAccessHostname = config.get("networkaccess.hostname");
    networkAccessPort = config.get("networkaccess.port");
 
-   setInterval(async ()=>{
+   //Digital Signage
+   digitalsignageHostname = config.get("digitalsignage.hostname"); 
+   digitalsignagePort = config.get("digitalsignage.port"); 
+
+   setInterval(async () => {
 
       // Database
       process.env.STATUS_DATABASE = await isPortReachable(databasePort, { host: databaseHostname });
@@ -99,7 +103,7 @@ module.exports = function() {
 
       //Digital Signage
       if (notification.digitalsignage) {
-         process.env.STATUS_DIGITALSIGNAGE = await isPortReachable(networkAccessPort, { host: networkAccessHostname });
+         process.env.STATUS_DIGITALSIGNAGE = await isPortReachable(digitalsignagePort, { host: digitalsignageHostname });
       }
 
       // Webex Teams

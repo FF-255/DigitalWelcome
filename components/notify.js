@@ -29,8 +29,6 @@ const digitalSignageFallbackDevice = { "ip": process.env.DMP_IP || null, "userna
 
 function notifyCheckin(params) {
 
-   console.log(params);
-
    let logoFileName = "logo.png";
    let logoFilePath = `${path.normalize(`${__dirname}/../public/images/`)}/logo.png`;
    let logoCID = "logo@logo.com";
@@ -50,10 +48,7 @@ function notifyCheckin(params) {
             let teams2 = await webexTeams.sendMessage({ "email": params.visitor.email, "message": visitorTeamsMessage });
          }
       }
-      catch (error) {
-         console.log(error);
-         errorMessage += "Webex Teams - Could not send message";
-      }
+      catch (error) { errorMessage += "Webex Teams - Could not send message"; }
 
       // Email
       try {
@@ -61,106 +56,41 @@ function notifyCheckin(params) {
             let emailSubject = message.emailCheckinSubject();
             let hostEmailMessage = message.emailCheckinMessageHost(params.visitor);
             let visitorEmailMessage = message.emailCheckinMessageVisitor(params.host);
-            if (params.networkAccess) visitorEmailMessage += message.teamsNetworkAccess(params.networkAccess);
+            if (params.networkAccess) visitorEmailMessage += message.emailNetworkAccess(params.networkAccess);
             let email1 = await email.sendMessage({ "email": params.host.email, "subject": emailSubject, "message": hostEmailMessage, "attachments": attachments });
             let email2 = await email.sendMessage({ "email": params.visitor.email, "subject": emailSubject, "message": visitorEmailMessage, "attachments": attachments });
          }
       }
-      catch (error) {
-         console.log(error);
-         errorMessage += "Email - Could not send message";
-      }
+      catch (error) { errorMessage += "Email - Could not send message"; }
 
       // SMS
       try {
          if (config.get("notification.sms")) {
             let hostSmsMessage = message.smsCheckinMessageHost(params.visitor);
             let visitorSmsMessage = message.smsCheckinMessageVisitor(params.host);
-            if (params.networkAccess) visitorSmsMessage += message.teamsNetworkAccess(params.networkAccess);
+            if (params.networkAccess) visitorSmsMessage += message.smsNetworkAccess(params.networkAccess);
             if (params.host.phone) { let sms1 = await sms.sendMessage({ "phone": params.host.phone, "message": hostSmsMessage }) }
             if (params.visitor.phone) { let sms2 = await sms.sendMessage({ "phone": params.visitor.phone, "message": visitorSmsMessage }) }
          }
       }
-      catch (error) {
-         console.log("SMS Error:", error);
-         errorMessage += "SMS - Could not send message";
-      }
+      catch (error) { errorMessage += "SMS - Could not send message"; }
 
       // Digital Signage
       try {
          if (config.get("notification.digitalsignage")) {
-            if (params.digitalSignage && params.room && params.room.name) { let digitalSignage1 = digitalSignage.playContent(params.digitalSignage, params.room.name ); }
-            else if (params.digitalSignage) { let digitalSignage2 = digitalSignage.playContent(params.digitalSignage, "SP1-26-CAFETERIA"); }
-            else if (digitalSignageFallbackDevice.ip) { let digitalSignage3 = digitalSignage.playContent(digitalSignageFallbackDevice, "SP1-26-CAFETERIA"); }
+            if (params.digitalSignage && params.room && params.room.name) { let digitalSignage1 = digitalSignage.playContent(params.digitalSignage, params.room.name); }
+            else if (params.digitalSignage) { let digitalSignage1 = digitalSignage.playContent(params.digitalSignage); }
+            else { let digitalSignage1 = digitalSignage.playContent(); }
          }
       }
-      catch (error) {
-         console.log(error);
-         errorMessage += "Digital Signage - Could not send notification";
-      }
+      catch (error) { errorMessage += "Digital Signage - Could not play content"; }
 
-      if (errorMessage) {
-         console.log(errorMessage);
-         reject (new Error(errorMessage));
-      }
-      else {
-         resolve ("All notitications were sucessfully sent");
-      }
+      if (errorMessage) return reject (new Error(errorMessage))
+      return resolve ("All notitications were sucessfully sent");
    })
 }
 
-/* async function notifyCheckin(params) {
-
-   let logoFileName = "logo.png";
-   let logoFilePath = `${path.normalize(`${__dirname}/../public/images/`)}/logo.png`;
-   let logoCID = "logo@logo.com";
-   let attachments = [{ filename: logoFileName, path: logoFilePath, cid: logoCID }];
-   
-   try {
-
-      // Webex Teams
-      if (config.get("notification.webexteams")) {
-         let hostTeamsMessage = message.teamsCheckinMessageHost(params.visitor);
-         let visitorTeamsMessage = message.teamsCheckinMessageVisitor(params.host);
-         if (config.get("notification.networkaccess") && params.networkAccess) visitorTeamsMessage += message.teamsNetworkAccess(params.networkAccess);
-         let teams1 = await webexTeams.sendMessage({ "email": params.host.email, "message": hostTeamsMessage });
-         let teams2 = await webexTeams.sendMessage({ "email": params.visitor.email, "message": visitorTeamsMessage });
-      }
-
-      // Email
-      if (config.get("notification.email")) {
-         let emailSubject = message.emailCheckinSubject();
-         let hostEmailMessage = message.emailCheckinMessageHost(params.visitor);
-         let visitorEmailMessage = message.emailCheckinMessageVisitor(params.host);
-         if (params.networkAccess) visitorEmailMessage += message.teamsNetworkAccess(params.networkAccess);
-         let email1 = await email.sendMessage({ "email": params.host.email, "subject": emailSubject, "message": hostEmailMessage, "attachments": attachments });
-         let email2 = await email.sendMessage({ "email": params.visitor.email, "subject": emailSubject, "message": visitorEmailMessage, "attachments": attachments });
-      }
-
-      // SMS
-      if (config.get("notification.sms")) {
-         let hostSmsMessage = message.smsCheckinMessageHost(params.visitor);
-         let visitorSmsMessage = message.smsCheckinMessageVisitor(params.host);
-         if (params.networkAccess) visitorSmsMessage += message.teamsNetworkAccess(params.networkAccess);
-         if (params.host.phone) { let sms1 = await sms.sendMessage({ "phone": params.host.phone, "message": hostSmsMessage }) }
-         if (params.visitor.phone) { let sms2 = await sms.sendMessage({ "phone": params.visitor.phone, "message": visitorSmsMessage }) }
-      }
-
-      // Digital Signage
-      if (config.get("notification.digitalsignage")) {
-         if (params.digitalSignage && params.room && params.room.name) { let digitalSignage1 = digitalSignage.playContent(params.digitalSignage, params.room.name ); }
-         else if (params.digitalSignage) { let digitalSignage2 = digitalSignage.playContent(params.digitalSignage, "SP1-26-CAFETERIA"); }
-         else if (digitalSignageFallbackDevice.ip) { let digitalSignage3 = digitalSignage.playContent(digitalSignageFallbackDevice, "SP1-26-CAFETERIA"); }
-      }
-   }
-   catch (error) {
-      return new Error(error);
-   }
-
-   return ("[Checkin - Notify] Notitications were sent correctly");
-}; */
-
-async function notifyMeeting(params) {
+function notifyMeeting(params) {
 
    return new Promisse(async (resolve, reject ) => {
 
@@ -192,11 +122,9 @@ async function notifyMeeting(params) {
          let email1 = await email.sendMessage({ "email": params.host.email, "subject": emailSubject, "message": hostEmailMessage, "attachments": attachments1 });
          let email2 = await email.sendMessage({ "email": params.visitor.email, "subject": emailSubject, "message": visitorEmailMessage, "attachments": attachments2 })  
       }
-      catch (error) {
-         reject (new Error(error));
-      }
+      catch (error) { return reject (new Error(error)); }
 
-      resolve ("[Meeting - Notify] Notitications were sent correctly");
+      return resolve ("[Meeting - Notify] Notitications were sent correctly");
    })
 };
 

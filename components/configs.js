@@ -140,8 +140,11 @@ async function saveConfigToDisk(params) {
          },
          digitalsignage: {
             hostname: params.digitalsignage.hostname,
+            port: params.digitalsignage.port,
+            authentication: params.digitalsignage.authentication,
             username: params.digitalsignage.username,
-            password: params.digitalsignage.password
+            password: params.digitalsignage.password,
+            trigger: params.digitalsignage.trigger
          }
       };
 

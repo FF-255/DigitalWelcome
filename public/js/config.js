@@ -316,8 +316,11 @@ function loadConfigurationFromServer(params) {
    
          // Digital Signage
          digitalsignage_hostname.value = (typeof configData.digitalsignage.hostname !== "undefined") ? configData.digitalsignage.hostname : "";
+         digitalsignage_port.value = (typeof configData.digitalsignage.port !== "undefined") ? configData.digitalsignage.port : "";
          digitalsignage_username.value = (typeof configData.digitalsignage.username !== "undefined") ? configData.digitalsignage.username : "";
          digitalsignage_password.value = (typeof configData.digitalsignage.password !== "undefined") ? configData.digitalsignage.password : "";
+         digitalsignage_authentication_enable.value = ((typeof configData.digitalsignage.authentication !== "undefined") && (configData.digitalsignage.authentication)) ? "Enabled" : "Disabled";
+         digitalsignage_trigger.value = (typeof configData.digitalsignage.trigger !== "undefined") ? configData.digitalsignage.trigger : "";
 
       }
       
@@ -389,8 +392,11 @@ function saveConfigurationToServer() {
       },
       "digitalsignage": {
          "hostname": digitalsignage_hostname.value,
+         "port": digitalsignage_port.value,
+         "authentication": digitalsignage_authentication_enable.value === "Enabled",
          "username": digitalsignage_username.value,
-         "password": digitalsignage_password.value
+         "password": digitalsignage_password.value,
+         "trigger": digitalsignage_trigger.value
       }
    };
 
@@ -408,7 +414,7 @@ function saveConfigurationToServer() {
          configData.notification.language = "pt-br";
          break;
 
-      case "Deustch":
+      case "Deutsche":
          configData.notification.language = "de";
          break;
 

@@ -52,7 +52,10 @@
    },
    "digitalsignage": {
       "hostname": "NO_CONFIG",
+      "port": 8080,
       "username": "NO_CONFIG",
-      "password": "NO_CONFIG"
+      "password": "NO_CONFIG",
+      "authentication": false,
+      "trigger": 16
    }
 }

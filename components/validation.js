@@ -73,8 +73,11 @@ const configCreateUpdateSchema = {
    },
    digitalsignage: {
       hostname: Joi.string(),
+      port: Joi.number(),
+      authentication: Joi.boolean(),
       username: Joi.string(),
-      password: Joi.string()
+      password: Joi.string(),
+      trigger: Joi.number().min(1).max(16)
    }
 }
 
