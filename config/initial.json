@@ -48,7 +48,9 @@
       "sponsor_username": "NO_CONFIG",
       "sponsor_password": "NO_CONFIG",
       "sponsor_userid": "NO_CONFIG",
-      "guest_portalid": "NO_CONFIG"
+      "guest_portalid": "NO_CONFIG",
+      "guest_type": "NO_CONFIG",
+      "guest_location": "NO_CONFIG"
    },
    "digitalsignage": {
       "hostname": "NO_CONFIG",

@@ -24,6 +24,7 @@ const express = require('express');
 const welcomeWebApp = express();
 
 //##########  Server Init  #########
+
 welcomeWebApp.use(express.json());
 welcomeWebApp.use(express.static('./public'));
 
@@ -45,4 +46,6 @@ welcomeWebApp.listen (port, () => {
 
 //##########    Services   ##########
 //##########    Monitor    ##########
+
 require('./components/serviceStatus')();
+

@@ -69,7 +69,9 @@ const configCreateUpdateSchema = {
       sponsor_username: Joi.string(),
       sponsor_password: Joi.string(),
       sponsor_userid: Joi.string(),
-      guest_portalid: Joi.string()
+      guest_portalid: Joi.string(),
+      guest_type: Joi.string(),
+      guest_location: Joi.string()
    },
    digitalsignage: {
       hostname: Joi.string(),

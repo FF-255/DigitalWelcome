@@ -313,6 +313,8 @@ function loadConfigurationFromServer(params) {
          networkaccess_sponsor_password.value = (typeof configData.networkaccess.sponsor_password !== "undefined") ? configData.networkaccess.sponsor_password : "";
          networkaccess_sponsor_userid.value = (typeof configData.networkaccess.sponsor_userid !== "undefined") ? configData.networkaccess.sponsor_userid : "";
          networkaccess_guest_portalid.value = (typeof configData.networkaccess.guest_portalid !== "undefined") ? configData.networkaccess.guest_portalid : "";
+         networkaccess_guest_type.value = (typeof configData.networkaccess.guest_type !== "undefined") ? configData.networkaccess.guest_type : "";
+         networkaccess_guest_location.value = (typeof configData.networkaccess.guest_location !== "undefined") ? configData.networkaccess.guest_location : "";
    
          // Digital Signage
          digitalsignage_hostname.value = (typeof configData.digitalsignage.hostname !== "undefined") ? configData.digitalsignage.hostname : "";
@@ -388,7 +390,9 @@ function saveConfigurationToServer() {
          "sponsor_username": networkaccess_sponsor_username.value,
          "sponsor_password": networkaccess_sponsor_password.value,
          "sponsor_userid": networkaccess_sponsor_userid.value,
-         "guest_portalid": networkaccess_guest_portalid.value
+         "guest_portalid": networkaccess_guest_portalid.value,
+         "guest_type": networkaccess_guest_portalid.value,
+         "guest_location": networkaccess_guest_portalid.value
       },
       "digitalsignage": {
          "hostname": digitalsignage_hostname.value,
@@ -422,7 +426,6 @@ function saveConfigurationToServer() {
          configData.notification.language = "fr";
          break;
    }
-   console.log(configData);
 
    let hostname = window.location.hostname;
    let portNumber = window.location.port;
@@ -479,11 +482,25 @@ function editMode(event) {
       case "notification_digitalsignage":
          className = "digitalsignage";
          break;
+
+      case "email_service":
+         isDisabled = (event.target.value === "GMAIL");
+         className = "email_service";
+         email_authentication_enable.value = "Enabled";
+      break;
    }
 
    let elements = document.getElementsByClassName(className);
    for (let i = 0; i < elements.length; i++) {
       elements[i].disabled = isDisabled;
+   }
+
+   if (event.target.id == "notification_email" && email_service.value == "GMAIL") {
+      let elements = document.getElementsByClassName("email_service");
+      for (let i = 0; i < elements.length; i++) {
+         elements[i].disabled = true;
+      }
+
    }
 }
 
@@ -532,6 +549,11 @@ function edit_all_fields() {
 
    if (notification_digitalsignage.value === "Disabled") {
       elements = document.getElementsByClassName("digitalsignage");
+      for (let i = 0; i < elements.length; i++) { elements[i].disabled = true; }
+   }
+
+   if (email_service.value === "GMAIL") {
+      elements = document.getElementsByClassName("email_service");
       for (let i = 0; i < elements.length; i++) { elements[i].disabled = true; }
    }
 }

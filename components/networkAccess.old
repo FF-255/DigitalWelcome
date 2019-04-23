@@ -14,17 +14,23 @@ Module developed by:
 
 //##########  Ext Modules  ##########
 
+// process.env.APP_DIR = '/Users/ffurlan/CiscoApps/DigitalWelcome';
+// process.env.NODE_CONFIG_DIR = '/Users/ffurlan/CiscoApps/DigitalWelcome/config';
+
 const request = require('request').defaults({ rejectUnauthorized: false });
+//, requestCert: true, agent: false
 
 const config = require('config');
 let iseHostName = config.get("networkaccess.hostname");
 let isePort = config.get("networkaccess.port");
+let ersUserName = config.get("networkaccess.ers_username");
+let ersPassword = config.get("networkaccess.ers_password");
 let sponsorUserName = config.get("networkaccess.sponsor_username");
 let sponsorPassword = config.get("networkaccess.sponsor_password");
 let sponsorUserId = config.get("networkaccess.sponsor_userid");
 let guestPortalId = config.get("networkaccess.guest_portalid");
-let guestType = config.get("networkaccess.guest_type");
-let guestLocation = config.get("networkaccess.guest_location");
+let guestType = 'Contractor (default)';
+let location = 'San Jose',
 
 function iseRequest(method, type, params) {
 
@@ -51,7 +57,7 @@ function iseRequest(method, type, params) {
 
       // POST new user info
       if (method == 'POST' && type == 'json') {
-         options.url = `https://${iseHostName}:${isePort}/ers/config/guestuser`;
+         options.url = `https://${iseHostName}:${isePort}/ers/config/guestuser`
          options.body = params.body;
          options.json = true;
       }
@@ -72,7 +78,7 @@ function iseRequest(method, type, params) {
          if (response.statusCode == 400 || response.statusCode == 404) return reject("Error: " + body.ERSResponse.messages[0].title)
          if (response.statusCode == 200 && method == 'GET') return resolve(body)
          
-         return reject("Error: Unkown error detected.");
+         return reject("Error: Unkown error in this awesome application.");
 
       })  
    })
@@ -119,24 +125,39 @@ function createNewAccount(params) {
          body: {
             GuestUser: {
                customFields: {},
-               guestType: guestType,
+               guestType: 'Contractor (default)',
                portalId: guestPortalId,
                sponsorUserName: sponsorUserName,
                sponsorUserId: sponsorUserId,
+               // status: 'ACTIVE',
+               // personBeingVisited: params.host.email,
+               // reasonForVisit: "Meeting",
                guestInfo: {
                   userName: params.email,
                   firstName: params.name.firstName,
                   lastName: params.name.lastName,
                   emailAddress: params.email,
+                  // phoneNumber: params.phone,
                   password: password,
+                  // creationTime: iseDate('Start'),
+                  //company: 'Cisco Systems',
+                  //notificationLanguage: 'English',
+                  //smsServiceProvider: 'Global Default',
                   enabled: true
                },
                guestAccessInfo: {
-                  location: guestLocation,
+                  location: 'San Jose',
                   fromDate: iseDate('Start'),
                   toDate: iseDate('End'),
+                  //ssid: 'ssid',
+                  //groupTag: 'DigitalWelcomingAPIUser'
                   validDays: 1
-               }
+               },
+               // link: {
+               //    rel: 'self',
+               //    href: `https://${iseHostName}:${isePort}/ers/config/guestuser/name/${params.visitor.email}`,
+               //    type: 'application/xml'
+               // }
             }
          }
       }
@@ -160,7 +181,7 @@ function activateAccount(params) {
          body: {
             GuestUser: {
                customFields: {},
-               guestType: guestType,
+               guestType: 'Contractor (default)',
                portalId: guestPortalId,
                sponsorUserName: sponsorUserName,
                sponsorUserId: sponsorUserId,
@@ -171,7 +192,7 @@ function activateAccount(params) {
                   password: password,
                },
                guestAccessInfo: {
-                  location: guestLocation,
+                  location: 'San Jose',
                   fromDate: iseDate('Start'),
                   toDate: iseDate('End'),
                   validDays: 1
@@ -220,8 +241,9 @@ function randomPasswordGenerate(params = 8) {
    
    let characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!#@$&*";
    let password = "";
+   passwordLength = params;
 
-   for (let i = 0; i < params; i++)
+   for (let i = 0; i < passwordLength; i++)
       password += characters.charAt(Math.floor(Math.random() * characters.length));
 
    return (password);
@@ -240,6 +262,7 @@ function iseDate(params) {
 
    if (params == 'Start') return (`${mo}/${dd}/${yyyy} ${hh}:${mi}`)
    if (params == 'End') return (`${mo}/${dd}/${yyyy} 23:59`)
+   
 }
 
 module.exports.createGuestAccess = createGuestAccess;

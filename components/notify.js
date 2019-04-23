@@ -23,18 +23,14 @@ const digitalSignage = require('./digitalSignage');
 const QRCode = require('qrcode');
 const path = require('path');
 const digitalSignageFallbackDevice = { "ip": process.env.DMP_IP || null, "username": process.env.DMP_USERNAME || null, "password": process.env.DMP_PASSWORD || null };
+const logo = { fileName: "logo.png", filePath: `${path.normalize(`${__dirname}/../public/images/`)}/logo.png`, cid: "logo@logo.com" };
 
 //########## Teams, Email, ##########
 //########## SMS Messaging ##########
 
 function notifyCheckin(params) {
 
-   let logoFileName = "logo.png";
-   let logoFilePath = `${path.normalize(`${__dirname}/../public/images/`)}/logo.png`;
-   let logoCID = "logo@logo.com";
-   let attachments = [{ filename: logoFileName, path: logoFilePath, cid: logoCID }];
-
-   let errorMessage = null;
+   let errorMessage = [];
 
    return new Promise(async (resolve, reject) => {
 
@@ -48,7 +44,7 @@ function notifyCheckin(params) {
             let teams2 = await webexTeams.sendMessage({ "email": params.visitor.email, "message": visitorTeamsMessage });
          }
       }
-      catch (error) { errorMessage += "Webex Teams - Could not send message"; }
+      catch (error) { errorMessage.push("Webex Teams - Could not send message"); }
 
       // Email
       try {
@@ -56,12 +52,13 @@ function notifyCheckin(params) {
             let emailSubject = message.emailCheckinSubject();
             let hostEmailMessage = message.emailCheckinMessageHost(params.visitor);
             let visitorEmailMessage = message.emailCheckinMessageVisitor(params.host);
-            if (params.networkAccess) visitorEmailMessage += message.emailNetworkAccess(params.networkAccess);
+            if (params.networkAccess) visitorEmailMessage += message.emailNetworkAccess(params.networkAccess)
+            let attachments = [{ filename: logo.fileName, path: logo.filePath, cid: logo.cid }];
             let email1 = await email.sendMessage({ "email": params.host.email, "subject": emailSubject, "message": hostEmailMessage, "attachments": attachments });
             let email2 = await email.sendMessage({ "email": params.visitor.email, "subject": emailSubject, "message": visitorEmailMessage, "attachments": attachments });
          }
       }
-      catch (error) { errorMessage += "Email - Could not send message"; }
+      catch (error) { errorMessage.push("Email - Could not send message"); }
 
       // SMS
       try {
@@ -73,20 +70,20 @@ function notifyCheckin(params) {
             if (params.visitor.phone) { let sms2 = await sms.sendMessage({ "phone": params.visitor.phone, "message": visitorSmsMessage }) }
          }
       }
-      catch (error) { errorMessage += "SMS - Could not send message"; }
+      catch (error) { errorMessage.push("SMS - Could not send message"); }
 
       // Digital Signage
       try {
          if (config.get("notification.digitalsignage")) {
-            if (params.digitalSignage && params.room && params.room.name) { let digitalSignage1 = digitalSignage.playContent(params.digitalSignage, params.room.name); }
-            else if (params.digitalSignage) { let digitalSignage1 = digitalSignage.playContent(params.digitalSignage); }
+            // if (params.digitalSignage && params.room && params.room.name) { let digitalSignage1 = digitalSignage.playContent(params.digitalSignage, params.room.name); }
+            if (params.hasOwnProperty("room.name")) { let digitalSignage1 = digitalSignage.playContent(params.room.name); }
             else { let digitalSignage1 = digitalSignage.playContent(); }
          }
       }
-      catch (error) { errorMessage += "Digital Signage - Could not play content"; }
+      catch (error) { errorMessage.push("Digital Signage - Could not play content"); }
 
-      if (errorMessage) return reject (new Error(errorMessage))
-      return resolve ("All notitications were sucessfully sent");
+      if (errorMessage.length > 0) return reject ("Could not send all notifications", new Error(errorMessage))
+      return resolve ("Notitications sent sucessfully");
    })
 }
 
@@ -96,20 +93,9 @@ function notifyMeeting(params) {
 
       try {
 
-         // QR code generation
-
-         let logoFileName = "logo.png";
-         let logoFilePath = `${path.normalize(`${__dirname}/../public/images/`)}/logo.png`;
-         let logoCID = "logo@logo.com";
+         let qrcode = generateQrcodeInfo(params.meeting._id); // QR code generation
          
-
-         let qrcodeText = `${params.meeting._id}`;
-         let qrcodeFileName = `${params.meeting._id}.png`;
-         let qrcodeFilePath = `${path.normalize(`${__dirname}/../public/images/qrcode`)}/${params.meeting._id}.png`;
-         let qrcodeCID = `${params.meeting._id}@qrcode.com`;
-         let qrcodeOptions = { color: { dark: '#000', light: '#FFF' } };
-         
-         QRCode.toFile(qrcodeFilePath, qrcodeText, qrcodeOptions, (error) => {
+         QRCode.toFile(qrcode.filePath, qrcode.text, qrcode.options, (error) => {
             if (error) { throw new Error (error) }
          });
          
@@ -117,8 +103,8 @@ function notifyMeeting(params) {
          let emailSubject = message.emailMeetingSubject();
          let hostEmailMessage = message.emailMeetingMessageHost(params);
          let visitorEmailMessage = message.emailMeetingMessageVisitor(params);
-         let attachments1 = [{ filename: logoFileName, path: logoFilePath, cid: logoCID }];
-         let attachments2 = [{ filename: logoFileName, path: logoFilePath, cid: logoCID }, { filename: qrcodeFileName, path: qrcodeFilePath, cid: qrcodeCID }];
+         let attachments1 = [{ filename: logo.fileName, path: logo.filePath, cid: logo.cid }];
+         let attachments2 = [{ filename: logo.fileName, path: logo.filePath, cid: logo.cid }, { filename: qrcode.fileName, path: qrcode.filePath, cid: qrcode.cid }];
          let email1 = await email.sendMessage({ "email": params.host.email, "subject": emailSubject, "message": hostEmailMessage, "attachments": attachments1 });
          let email2 = await email.sendMessage({ "email": params.visitor.email, "subject": emailSubject, "message": visitorEmailMessage, "attachments": attachments2 })  
       }
@@ -127,6 +113,18 @@ function notifyMeeting(params) {
       return resolve ("[Meeting - Notify] Notitications were sent correctly");
    })
 };
+
+function generateQrcodeInfo(params) {
+
+   return ({
+      text: `${params}`,
+      fileName: `${params}.png`,
+      filePath: `${path.normalize(`${__dirname}/../public/images/qrcode`)}/${params}.png`,
+      cid: `${params}@qrcode.com`,
+      options: { color: { dark: '#000', light: '#FFF' } }
+   })
+}
+
 
 module.exports.notifyCheckin = notifyCheckin;
 module.exports.notifyMeeting = notifyMeeting;

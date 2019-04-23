@@ -137,7 +137,7 @@
             <div class="card card-body">
                <div class="form-row">
                   <div class="form-group col-md-2 text-center">
-                     <label for="service_database">Database</label>
+                     <label for="service_database">Database (mongoDB)</label>
                      <input name="service_database" type="text" class="form-control shadow-sm p-3 mb-1 rounded general text-white text-center" id="service_database" aria-describedby="generalPortHelpBlock">
                   </div>
                   <div class="form-group col-md-2 text-center">
@@ -153,7 +153,7 @@
                      <input name="service_webexteams" type="text" class="form-control shadow-sm p-3 mb-1 rounded general text-white text-center" id="service_webexteams" aria-describedby="generalPortHelpBlock">
                   </div>
                   <div class="form-group col-md-2 text-center">
-                     <label for="service_networkaccess">Network Access</label>
+                     <label for="service_networkaccess">Network Access (ISE)</label>
                      <input name="service_networkaccess" type="text" class="form-control shadow-sm p-3 mb-1 rounded general text-white text-center" id="service_networkaccess" aria-describedby="generalPortHelpBlock">
                   </div>
                   <div class="form-group col-md-2 text-center">
@@ -306,40 +306,41 @@
             <div class="form-row">
                <div class="form-group col-md-3">
                   <label for="email_service">Service</label>
-                  <select class="form-control shadow-sm p-3 mb-1 rounded email general" id="email_service">
+                  <select class="form-control shadow-sm p-3 mb-1 rounded email general" id="email_service" onchange="editMode(event)">
                      <option>SMTP</option>
                      <option>GMAIL</option>
                   </select>
                </div>
-               <div class="form-group col-md-3">
-                  <label for="email_hostname">Hostname</label>
-                  <input name="email_hostname" type="text" class="form-control shadow-sm p-3 mb-1 rounded email general"
-                     id="email_hostname">
-               </div>
-               <div class="form-group col-md-3">
-                  <label for="email_port">Port</label>
-                  <input name="email_port" type="text" class="form-control shadow-sm p-3 mb-1 rounded email general"
-                  id="email_port">
-               </div>
-            </div>
-            <div class="form-row">
-               <div class="form-group col-md-3">
+              <div class="form-group col-md-3">
                   <label for="email_username">E-mail Account</label>
                   <input name="email_username" type="text" class="form-control shadow-sm p-3 mb-1 rounded email general"
                      id="email_username">
-               </div>
-               <div class="form-group col-md-3">
-                  <label for="email_authentication_enable">Authentication</label>
-                  <select class="form-control shadow-sm p-3 mb-1 rounded email general" id="email_authentication_enable">
-                     <option>Enabled</option>
-                     <option>Disabled</option>
-                  </select>
                </div>
                <div class="form-group col-md-3">
                   <label for="email_password">Password</label>
                   <input name="email_password" type="password" class="form-control shadow-sm p-3 mb-1 rounded email general"
                      id="email_password">
                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-3">
+                  <label for="email_hostname">Hostname</label>
+                  <input name="email_hostname" type="text" class="form-control shadow-sm p-3 mb-1 rounded email general email_service"
+                     id="email_hostname">
+               </div>
+               <div class="form-group col-md-3">
+                  <label for="email_port">Port</label>
+                  <input name="email_port" type="text" class="form-control shadow-sm p-3 mb-1 rounded email general email_service"
+                  id="email_port">
+               </div>
+               <div class="form-group col-md-3">
+                  <label for="email_authentication_enable">Authentication</label>
+                  <select class="form-control shadow-sm p-3 mb-1 rounded email general email_service" id="email_authentication_enable">
+                     <option>Enabled</option>
+                     <option>Disabled</option>
+                  </select>
+               </div>
+
             </div>
          </div><br>
 
@@ -377,7 +378,7 @@
                <h3>Webex Teams</h3>
             </div>
             <div class="form-group col-md-12">
-               <label for="webexteams_access_token">Token</label>
+               <label for="webexteams_access_token">BOT's token</label>
                <input name="webexteams_access_token" type="text" class="form-control col-md-3 shadow-sm p-3 mb-1 rounded webexteams general"
                   id="webexteams_access_token">
             </div>
@@ -400,14 +401,14 @@
                      id="networkaccess_port">
                </div>
                <div class="form-group col-md-3">
-                  <label for="networkaccess_ers_username">ERS Username</label>
-                  <input name="networkaccess_ers_username" type="text" class="form-control shadow-sm p-3 mb-1 rounded networkaccess general"
-                     id="networkaccess_ers_username">
+                  <label for="networkaccess_guest_type">Guest Type</label>
+                  <input name="networkaccess_guest_type" type="text"
+                     class="form-control shadow-sm p-3 mb-1 rounded networkaccess general" id="networkaccess_guest_type">
                </div>
                <div class="form-group col-md-3">
-                  <label for="networkaccess_ers_password">ERS Password</label>
-                  <input name="networkaccess_ers_password" type="password" class="form-control shadow-sm p-3 mb-1 rounded networkaccess general"
-                     id="networkaccess_ers_password">
+                  <label for="networkaccess_guest_location">Location</label>
+                  <input name="networkaccess_guest_location" type="text"
+                     class="form-control shadow-sm p-3 mb-1 rounded networkaccess general" id="networkaccess_guest_location">
                </div>
             </div>
             <div class="form-row">
@@ -430,6 +431,18 @@
                   <label for="networkaccess_guest_portalid">Guest Portal ID</label>
                   <input name="networkaccess_guest_portalid" type="text" class="form-control shadow-sm p-3 mb-1 rounded networkaccess general"
                      id="networkaccess_guest_portalid">
+               </div>
+            </div>
+            <div class="form-row" hidden>
+               <div class="form-group col-md-3">
+                  <label for="networkaccess_ers_username">ERS Username</label>
+                  <input name="networkaccess_ers_username" type="text" class="form-control shadow-sm p-3 mb-1 rounded networkaccess general"
+                     id="networkaccess_ers_username">
+               </div>
+               <div class="form-group col-md-3">
+                  <label for="networkaccess_ers_password">ERS Password</label>
+                  <input name="networkaccess_ers_password" type="password" class="form-control shadow-sm p-3 mb-1 rounded networkaccess general"
+                     id="networkaccess_ers_password">
                </div>
             </div>
          </div><br>

@@ -20,23 +20,23 @@
   "author": "Fabiano Furlan (Technical Solutions Architect)",
   "license": "MIT",
   "dependencies": {
-    "bcrypt": "^3.0.5",
+    "bcrypt": "^3.0.6",
     "body-parser": "^1.18.2",
-    "config": "^3.0.1",
+    "config": "^3.1.0",
     "debug": "^3.1.0",
     "express": "^4.16.4",
     "global-tunnel-ng": "^2.7.1",
     "htmlparser2": "^3.10.1",
-    "is-port-reachable": "^2.0.0",
+    "is-port-reachable": "^2.0.1",
     "joi": "^14.3.1",
-    "jsonwebtoken": "^8.5.0",
+    "jsonwebtoken": "^8.5.1",
     "jsxapi": "^4.2.0",
     "lodash": "^4.17.11",
-    "mongoose": "^5.4.18",
+    "mongoose": "^5.5.2",
     "node-sparkclient": "^0.1.4",
     "nodemailer": "^4.7.0",
-    "nodemon": "^1.18.10",
+    "nodemon": "^1.18.11",
     "qrcode": "^1.3.3",
-    "twilio": "^3.29.1"
+    "twilio": "^3.30.1"
   }
 }
