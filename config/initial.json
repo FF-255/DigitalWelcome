@@ -50,7 +50,8 @@
       "sponsor_userid": "NO_CONFIG",
       "guest_portalid": "NO_CONFIG",
       "guest_type": "NO_CONFIG",
-      "guest_location": "NO_CONFIG"
+      "guest_location": "NO_CONFIG",
+      "ssid": "NO_CONFIG"
    },
    "digitalsignage": {
       "hostname": "NO_CONFIG",

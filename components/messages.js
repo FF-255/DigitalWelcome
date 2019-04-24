@@ -81,6 +81,7 @@ const MES_CHECKIN_GUEST_HEADER = config.get("messages.MES_CHECKIN_GUEST_HEADER")
 const MES_MEETING_SUBJECT = config.get("messages.MES_MEETING_SUBJECT");
 const MES_MEETING_LINE1 = config.get("messages.MES_MEETING_LINE1");
 const MES_MEETING_LINE2 = config.get("messages.MES_MEETING_LINE2");
+const MES_NETWORKACCESS = config.get("networkaccess.ssid");
 
 //##########    Config     ##########
 
@@ -178,7 +179,7 @@ function smsCheckinMessageVisitor(params) {
 function teamsNetworkAccess(params) {
 
    let vMessage = `${mStrong}${MES_CHECKIN_GUEST_HEADER}${mStrong}${mLE}${mLE}`;
-   vMessage += `SSID: ${mStrong}internet${mStrong}${mLE}`;
+   vMessage += `SSID: ${mStrong}${MES_NETWORKACCESS}${mStrong}${mLE}`;
    vMessage += `Username: ${mStrong}${params.username}${mStrong}${mLE}`;
    vMessage += `Password: ${mStrong}${params.password}${mStrong}${mLE}${mLE}`;
 
@@ -188,7 +189,7 @@ function teamsNetworkAccess(params) {
 function emailNetworkAccess(params) {
 
    let vMessage = `${hParagS}${hStrongS}${MES_CHECKIN_GUEST_HEADER}${hStrongE}${hParagE}`;
-   vMessage += `${hParagS}SSID: ${hStrongS}internet${hStrongE}${hParagE}`;
+   vMessage += `${hParagS}SSID: ${hStrongS}${MES_NETWORKACCESS}${hStrongE}${hParagE}`;
    vMessage += `${hParagS}Username: ${hStrongS}${params.username}${hStrongE}${hParagE}`;
    vMessage += `${hParagS}Password: ${hStrongS}${params.password}${hStrongE}${hParagE}${hLE}${hHTMLE}`;
 
@@ -198,7 +199,7 @@ function emailNetworkAccess(params) {
 function smsNetworkAccess(params) {
 
    let vMessage = `${MES_CHECKIN_GUEST_HEADER}${sLE}${sLE}`;
-   vMessage += `SSID: internet${sLE}`;
+   vMessage += `SSID: ${MES_NETWORKACCESS}${sLE}`;
    vMessage += `Username: ${params.username}${sLE}`;
    vMessage += `Password: ${params.password}${sLE}`;
 

@@ -16,7 +16,8 @@ Module developed by:
 // process.env.NODE_CONFIG_DIR = '/Users/ffurlan/CiscoApps/DigitalWelcome/config';
 
 //##########  Ext Modules  ##########
-const request = require('request').defaults({ rejectUnauthorized: false, requestCert: true, agent: false });
+const request = require('request').defaults({ rejectUnauthorized: false });
+// , requestCert: true, agent: false
 const config = require('config');
 
 const server = {
@@ -48,8 +49,8 @@ function selectCiscoVisionTrigger (params) {
    return new Promise((resolve, reject) => {
       
       let options =  {
-         method: 'POST',
-         url: `http://${server.hostname}:${server.port}/CiscoVision/ws/rest/trigger/input/${params}`,
+         method: 'GET',
+         url: `http://${server.hostname}:${server.port}/CiscoVision/ws/rest/trigger/input/${params}`
          // headers: {
          //    'cache-control': 'no-cache',
          //    'Content-Type': 'application/json',

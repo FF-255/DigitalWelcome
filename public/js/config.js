@@ -316,6 +316,7 @@ function loadConfigurationFromServer(params) {
          networkaccess_guest_portalid.value = (typeof configData.networkaccess.guest_portalid !== "undefined") ? configData.networkaccess.guest_portalid : "";
          networkaccess_guest_type.value = (typeof configData.networkaccess.guest_type !== "undefined") ? configData.networkaccess.guest_type : "";
          networkaccess_guest_location.value = (typeof configData.networkaccess.guest_location !== "undefined") ? configData.networkaccess.guest_location : "";
+         networkaccess_ssid.value = (typeof configData.networkaccess.ssid !== "undefined") ? configData.networkaccess.ssid : "";
    
          // Digital Signage
          digitalsignage_hostname.value = (typeof configData.digitalsignage.hostname !== "undefined") ? configData.digitalsignage.hostname : "";
@@ -392,8 +393,9 @@ function saveConfigurationToServer() {
          "sponsor_password": networkaccess_sponsor_password.value,
          "sponsor_userid": networkaccess_sponsor_userid.value,
          "guest_portalid": networkaccess_guest_portalid.value,
-         "guest_type": networkaccess_guest_portalid.value,
-         "guest_location": networkaccess_guest_portalid.value
+         "guest_type": networkaccess_guest_type.value,
+         "guest_location": networkaccess_guest_location.value,
+         "ssid": networkaccess_ssid.value,
       },
       "digitalsignage": {
          "hostname": digitalsignage_hostname.value,

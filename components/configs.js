@@ -138,7 +138,8 @@ async function saveConfigToDisk(params) {
             sponsor_userid: params.networkaccess.sponsor_userid,
             guest_portalid: params.networkaccess.guest_portalid,
             guest_type: params.networkaccess.guest_type,
-            guest_location: params.networkaccess.guest_location
+            guest_location: params.networkaccess.guest_location,
+            ssid: params.networkaccess.ssid
          },
          digitalsignage: {
             hostname: params.digitalsignage.hostname,
