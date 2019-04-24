@@ -129,7 +129,7 @@ function loadServicesStatus() {
 
          service_status_global.classList.remove("bg-success", "bg-danger");
 
-         if (serviceStatusGlobal === true) service_status_global.classList.add("bg-success")
+         if (serviceStatusGlobal) service_status_global.classList.add("bg-success")
          else service_status_global.classList.add("bg-danger")
 
       }
@@ -153,40 +153,41 @@ function loadServicesStatus() {
 // Alerts admins with usefull messages about the current action
 function alertMessages(params){
 
-   let messages = {
-      "init": true,
-      "previous": true,
-      "edit": true,
-      "current": true,
-      "save": true
-   }
+   let element = document.getElementById("alert_messages");
 
    switch (params) {
-
-      case ("init"):
-         messages.init = false;
+      case ('init'):
+         element.innerHTML="<strong>Warning: </strong>No previous configuration found in the database. Please provide initial setup info.";
+         element.classList.add("alert","alert-warning");
          break;
 
-      case ("previous"):
-         messages.previous = false;
+      case ('previous'):
+         element.innerHTML="<strong>Warning: </strong>This is the previous configuration. Use it with caution.";
+         element.classList.add("alert","alert-warning");
          break;
 
-      case ("edit"):
-         messages.edit = false;
+      case ('edit'):
+         element.innerHTML="<strong>Note: </strong>Please press <strong>Save and Apply</strong> button to confirm configuration changes.";
+         element.classList.add("alert","alert-info");
          break;
 
-      case ("save"):
-         messages.save = false;
+      case ('save'):
+         element.innerHTML="<strong>Note: </strong>Configuration settings applied sucessfully.";
+         element.classList.add("alert","alert-info");
          break;
-
-      case ("current"):
-
    }
 
-   warning_initial_config.hidden = messages.init;
-   warning_previous_configuration.hidden = messages.previous;
-   warning_edit_configuration.hidden = messages.edit;
-   success_save_and_apply.hidden = messages.save;
+   element.classList.add("warning-visible");
+
+   setTimeout(()=>{ 
+      element.classList.remove("warning-visible");
+      element.classList.add("warning-hidden");
+   }, 5000)
+   
+   setTimeout(()=>{ 
+      element.innerHTML="";
+      element.classList = "";
+   }, 7000)
 }
 
 function configButtonDisable()

@@ -125,6 +125,5 @@ function generateQrcodeInfo(params) {
    })
 }
 
-
 module.exports.notifyCheckin = notifyCheckin;
 module.exports.notifyMeeting = notifyMeeting;

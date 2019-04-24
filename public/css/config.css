@@ -1,3 +1,4 @@
+
 .containerWidth {
    width: 80%;
 }
@@ -18,4 +19,16 @@
 .statisticsSectionHeader {
    font-size: 12px;
    margin: 12px;
+}
+
+.warning-hidden {
+  visibility: hidden;
+  opacity: 0;
+  transition: visibility 0s 2s, opacity 2s linear;
+}
+
+.warning-visible {
+  visibility: visible;
+  opacity: 1;
+  transition: opacity 2s linear;
 }

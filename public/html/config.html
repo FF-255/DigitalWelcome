@@ -115,10 +115,7 @@
       <form action="#" method="post" id="mainConfForm" name="mainConfForm">
 
          <!-- Alert Messages section -->
-         <div class="alert alert-warning" role="alert" id="warning_initial_config" hidden><strong>Warning: </strong>No previous configuration found in the database. Please provide initial setup info.</div>
-         <div class="alert alert-warning" role="alert" id="warning_previous_configuration" hidden><strong>Warning: </strong>This is the previous configuration. Use it with caution.</div>
-         <div class="alert alert-info" role="alert" id="warning_edit_configuration" hidden><strong>Note: </strong>Please press Save and Apply to confirm configuration changes.</div>
-         <div class="alert alert-info" role="alert" id="success_save_and_apply" hidden><strong>Note: </strong>Configuration settings applied sucessfully.</div>
+         <div role="alert" id="alert_messages"></div>
 
          <!-- Top Menu buttons -->
          <div class="form-row">
@@ -489,9 +486,9 @@
          <!-- Botton Menu buttons -->
          <div class="form-row">
             <div class="form-group col-md-12">
-               <a class="btn btn-info btn-lg float-left mr-2 configButtonPage_1" href="#" rel="no-refresh" role="button" id="load_previous_button_2" onclick="loadConfig('previous')">Load Previous</a>
-               <a class="btn btn-info btn-lg float-left mr-2 configButtonPage_2" href="#" rel="no-refresh" role="button" id="load_current_button_2" hidden onclick="loadConfig('current')">Load Current</a>
+               <a class="btn btn-info btn-lg float-right mr-2 configButtonPage_1" href="#" rel="no-refresh" role="button" id="load_previous_button_2" onclick="loadConfig('previous')">Load Previous</a>
                <a class="btn btn-info btn-lg float-right mr-2 actionButtonPage_1" href="#" rel="no-refresh" role="button" id="edit_button_2" onclick="editAction()">Edit</a>
+               <a class="btn btn-info btn-lg float-right mr-2 configButtonPage_2" href="#" rel="no-refresh" role="button" id="load_current_button_2" hidden onclick="loadConfig('current')">Load Current</a>
                <a class="btn btn-danger btn-lg float-right mr-2 actionButtonPage_2" href="#" rel="no-refresh" role="button" id="save_button_2" data-toggle="modal" data-target="#saveConfirmationDialog" hidden>Save and Apply</a>
                <a class="btn btn-info btn-lg float-right mr-2 actionButtonPage_2" href="#" rel="no-refresh" role="button" id="cancel_button_2" hidden onclick="cancelAction()">Cancel</a>
             </div>
@@ -506,5 +503,3 @@
 </body>
 
 </html>
-
-
