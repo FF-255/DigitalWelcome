@@ -79,6 +79,13 @@ router.post('/:id/signageContent', (req, res) => {
       .catch(err => res.status(400).send(errDescHeader + err));
 });
 
+router.post('/signageContent', (req, res) => {
+
+   digitalSignage.playContent()
+      .then(data => res.status(200).send(data))
+      .catch(err => res.status(400).send(errDescHeader + err));
+});
+
 //##########    Exports    ##########
 
 module.exports = router;
