@@ -77,7 +77,7 @@ function notifyCheckin(params) {
          if (config.get("notification.digitalsignage")) {
             // if (params.digitalSignage && params.room && params.room.name) { let digitalSignage1 = digitalSignage.playContent(params.digitalSignage, params.room.name); }
             if (params.hasOwnProperty("room.name")) { let digitalSignage1 = digitalSignage.playContent(params.room.name); }
-            else { let digitalSignage1 = digitalSignage.playContent(); }
+            else { let digitalSignage1 = await digitalSignage.playContent(); }
          }
       }
       catch (error) { errorMessage.push("Digital Signage - Could not play content"); }
